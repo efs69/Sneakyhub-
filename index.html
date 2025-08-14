@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sneakylinks — Hostels & Gadgets</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f6f9fb;
+  --card:#ffffff;
+  --muted:#64748b;
+  --primary:#0f6b8a;
+  --accent:#1fb28a;
+  --radius:12px;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:Roboto, Poppins, sans-serif; background:var(--bg); color:#0b2440; }
+
+.topbar {
+  position:sticky; top:0; z-index:1100;
+  background:linear-gradient(180deg,rgba(15,107,138,0.98),rgba(15,107,138,0.95));
+  padding:10px 18px; display:flex; align-items:center; justify-content:space-between;
+  box-shadow:0 6px 18px rgba(11,36,64,0.12);
+}
+.brand { display:flex; align-items:center; gap:12px; color:#fff; text-decoration:none; }
+.logo { width:42px; height:42px; border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),#2bb1c4);
+  display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700;
+}
+.brand h1 { margin:0; font-size:18px; font-weight:700; }
+.cta { background:var(--accent); color:#fff; padding:8px 12px; border-radius:10px; font-weight:700; border:none; cursor:pointer; }
+
+.container { max-width:1100px; margin:20px auto; padding:0 18px; }
+.tabs { display:flex; gap:8px; margin-bottom:14px; }
+.tab { background:#fff; padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600; color:var(--primary); border:1px solid transparent; }
+.tab.active { background:linear-gradient(90deg,var(--primary),#0c8aa4); color:#fff; }
+
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:18px; }
+.product { background:var(--card); border-radius:12px; padding:12px; box-shadow:0 8px 30px rgba(11,36,64,0.06); transition:transform .28s ease; display:flex; flex-direction:column; }
+.product:hover { transform:translateY(-4px); }
+.product img { width:100%; height:200px; object-fit:cover; border-radius:10px; }
+.meta { margin-top:10px; }
+.meta .title { font-weight:700; }
+.meta .spec { font-size:13px; color:var(--muted); margin-top:6px; }
+.bottom { display:flex; align-items:center; justify-content:space-between; margin-top:10px; }
+.price { font-weight:800; color:var(--primary); }
+.actions { display:flex; gap:8px; }
+.btn-secondary { background:var(--primary); color:#fff; border:none; padding:6px 10px; border-radius:8px; cursor:pointer; }
+.book-btn { background:var(--accent); border:none; color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; }
+
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; z-index:2000; }
+.modal { background:#fff; border-radius:12px; padding:16px; max-width:400px; width:90%; position:relative; }
+.modal .close { position:absolute; top:8px; right:10px; font-size:20px; cursor:pointer; }
+.modal label { display:block; margin-top:8px; font-size:13px; }
+.modal input, .modal select { width:100%; padding:8px; border-radius:8px; border:1px solid #ccc; margin-top:4px; }
+.send { background:var(--accent); border:none; color:#fff; padding:10px; border-radius:8px; margin-top:10px; cursor:pointer; width:100%; font-weight:700; }
+
+/* Request form */
+.request-form { margin-top:30px; background:#fff; padding:20px; border-radius:12px; box-shadow:0 8px 30px rgba(11,36,64,0.06); }
+.request-form h3 { margin-top:0; }
+.request-form textarea { width:100%; min-height:80px; padding:10px; border-radius:8px; border:1px solid #ccc; margin-top:6px; }
+
+footer { padding:20px; text-align:center; color:var(--muted); font-size:13px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="#" class="brand">
+    <div class="logo">SL</div>
+    <div><h1>Sneakylinks</h1></div>
+  </a>
+  <button class="cta" onclick="scrollToSection('products')">Browse</button>
+</div>
+
+<main class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="filterProducts('all')">All</button>
+    <button class="tab" onclick="filterProducts('hostel')">Hostels</button>
+    <button class="tab" onclick="filterProducts('gadget')">Gadgets</button>
+  </div>
+
+  <section id="products" class="grid">
+    <div class="product" data-type="hostel" data-name="Hostel 1" data-price="GH₵ 1,200/month">
+      <img src="https://via.placeholder.com/300x200?text=Hostel+1" alt="Hostel 1">
+      <div class="meta">
+        <div class="title">Hostel 1</div>
+        <div class="spec">2-Bedroom • Wi-Fi • AC</div>
+        <div class="bottom">
+          <div class="price">GH₵ 1,200/month</div>
+          <div class="actions">
+            <button class="btn-secondary" onclick="viewProduct(this)">View</button>
+            <button class="book-btn" onclick="bookProduct(this)">Book</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="request-form">
+    <h3>Request a Product</h3>
+    <p>If you can't find what you want, let us know and we'll get it for you.</p>
+    <textarea id="requestText" placeholder="Describe your preferred product..."></textarea>
+    <select id="requestWhatsapp">
+      <option value="">Choose WhatsApp number</option>
+      <option value="0597053192">0597053192</option>
+      <option value="0594708232">0594708232</option>
+      <option value="0594438054">0594438054</option>
+    </select>
+    <button class="send" onclick="sendRequest()">Send Request</button>
+  </section>
+</main>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="close" onclick="closeModal()">×</div>
+    <h3 id="modalTitle">Product Name</h3>
+    <p id="modalPrice">Price</p>
+    <form id="bookingForm">
+      <label>Name</label>
+      <input id="customerName" required>
+      <label>Location</label>
+      <input id="customerLocation" required>
+      <label>Telephone</label>
+      <input id="customerPhone" required>
+      <label>WhatsApp</label>
+      <select id="whatsappNumber" required>
+        <option value="">Choose number</option>
+        <option value="0597053192">0597053192</option>
+        <option value="0594708232">0594708232</option>
+        <option value="0594438054">0594438054</option>
+      </select>
+      <button type="submit" class="send">Send Booking via WhatsApp</button>
+    </form>
+  </div>
+</div>
+
+<footer>© Sneakylinks — Built for quick WhatsApp bookings</footer>
+
+<script>
+let activeFilter = 'all';
+function filterProducts(type) {
+  activeFilter = type;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.product').forEach(card=>{
+    card.style.display = (type==='all'||card.dataset.type===type)?'flex':'none';
+  });
+}
+
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+}
+
+function viewProduct(btn) {
+  const card = btn.closest('.product');
+  document.getElementById('modalTitle').textContent = card.dataset.name;
+  document.getElementById('modalPrice').textContent = card.dataset.price;
+  document.getElementById('overlay').style.display = 'flex';
+}
+
+function bookProduct(btn) {
+  const card = btn.closest('.product');
+  document.getElementById('modalTitle').textContent = card.dataset.name;
+  document.getElementById('modalPrice').textContent = card.dataset.price;
+  document.getElementById('overlay').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('overlay').style.display = 'none';
+}
+
+document.getElementById('bookingForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const name = document.getElementById('customerName').value.trim();
+  const location = document.getElementById('customerLocation').value.trim();
+  const phone = document.getElementById('customerPhone').value.trim();
+  const whatsapp = document.getElementById('whatsappNumber').value;
+  const product = document.getElementById('modalTitle').textContent;
+  const price = document.getElementById('modalPrice').textContent;
+  if(!whatsapp) return alert('Please choose a WhatsApp number');
+  const message = `Booking:%0AProduct: ${product}%0APrice: ${price}%0AName: ${name}%0ALocation: ${location}%0APhone: ${phone}`;
+  const wa = '233' + whatsapp.slice(1);
+  window.open(`https://wa.me/${wa}?text=${message}`, '_blank');
+  closeModal();
+});
+
+function sendRequest(){
+  const text = document.getElementById('requestText').value.trim();
+  const whatsapp = document.getElementById('requestWhatsapp').value;
+  if(!text || !whatsapp) return alert('Please enter request and choose WhatsApp number');
+  const message = `Product Request:%0A${encodeURIComponent(text)}`;
+  const wa = '233' + whatsapp.slice(1);
+  window.open(`https://wa.me/${wa}?text=${message}`, '_blank');
+}
+</script>
+</body>
+</html>
